@@ -1,0 +1,10 @@
+#!/bin/bash
+touch myfile.sh
+chmod u=rwx myfile.sh
+chmod g=rx myfile.sh
+chmod o=r myfile.sh
+chmod 754 myfile.sh
+ls -l myfile.sh
+git add myfile.sh
+git update-index --chmod=+x myfile.sh
+git add --chmod=+x myfile.sh
