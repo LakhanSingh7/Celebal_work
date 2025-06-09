@@ -1,0 +1,44 @@
+1: Installing Azure PowerShell
+  
+   Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
+
+2: Sign in & Define Variables
+
+   Connect-AzAccount
+
+# Customize variables
+$rgName     = "DemoRG"
+$location   = "EastUS"
+$vmName     = "DemoVM"
+$vnetName   = "DemoVNet"
+$subnetName = "DemoSubnet"
+$nsgName    = "DemoNSG"
+$pipName    = "DemoPublicIP"
+
+3: Creating the Resource Group
+ 
+   New-AzResourceGroup -Name $rgName -Location $location
+
+4: Deploy the VM with Networking & NSG
+
+  $cred = Get-Credential -Message "Enter VM admin credentials"
+
+New-AzVm `
+  -ResourceGroupName $rgName `
+  -Name $vmName `
+  -Location $location `
+  -VirtualNetworkName $vnetName `
+  -SubnetName $subnetName `
+  -SecurityGroupName $nsgName `
+  -PublicIpAddressName $pipName `
+  -OpenPorts 3389 `
+  -Credential $cred `
+  -Image "Win2022Datacenter"
+
+5: Verifying & Connecting
+   
+   Get-AzVm -ResourceGroupName $rgName -Name $vmName
+
+Get-AzPublicIpAddress -ResourceGroupName $rgName -Name $pipName | Select IpAddress
+
+  

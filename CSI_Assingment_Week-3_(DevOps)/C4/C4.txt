@@ -1,0 +1,27 @@
+running on git bash
+
+
+1. # Define variables
+POLICY_NAME="AuditVMsWithoutManagedDisks"
+POLICY_DISPLAY_NAME="Audit Virtual Machines Without Managed Disks"
+POLICY_DESCRIPTION="This policy audits virtual machines that do not use managed disks."
+SCOPE="/subscriptions/$(az account show --query id -o tsv)"
+
+
+2. az policy definition create \
+  --name $POLICY_NAME \
+  --display-name "$POLICY_DISPLAY_NAME" \
+  --description "$POLICY_DESCRIPTION" \
+  --rules ./audit-vms-without-managed-disks.json \
+  --mode All
+
+
+3. az policy assignment create \
+  --name $POLICY_NAME \
+  --display-name "$POLICY_DISPLAY_NAME" \
+  --description "$POLICY_DESCRIPTION" \
+  --scope $SCOPE \
+  --policy "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Authorization/policyDefinitions/$POLICY_NAME"
+
+
+4. az policy assignment list --scope $SCOPE --output table
